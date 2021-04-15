@@ -144,7 +144,7 @@ func (parser *CronExpressionParser) nextTime(prev int64, fields []*CronField) (n
 		}
 	}()
 
-	tfmt := time.Unix(prev/int64(time.Second), 0).UTC().Format(readDateLayout)
+	tfmt := time.Unix(prev/int64(time.Second), 0).Local().Format(readDateLayout)
 	ttok := strings.Split(strings.Replace(tfmt, "  ", " ", 1), " ")
 	hms := strings.Split(ttok[3], ":")
 	parser.maxDays = maxDays(intVal(months, ttok[1]), atoi(ttok[4]))
@@ -158,7 +158,7 @@ func (parser *CronExpressionParser) nextTime(prev int64, fields []*CronField) (n
 
 	nstr := fmt.Sprintf("%s %s %s:%s:%s %s", month, strconv.Itoa(dayOfMonth),
 		hour, minute, second, year)
-	ntime, err := time.Parse(writeDateLayout, nstr)
+	ntime, err := time.ParseInLocation(writeDateLayout, nstr, time.Local)
 	nextTime = ntime.UnixNano()
 	return
 }
