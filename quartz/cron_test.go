@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/reugn/go-quartz/quartz"
+	"github.com/woremacx/go-quartz/quartz"
 )
 
 func TestCronExpression1(t *testing.T) {

@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/reugn/go-quartz/quartz"
+	"github.com/woremacx/go-quartz/quartz"
 )
 
 var from_epoch int64 = 1577836800000000000
