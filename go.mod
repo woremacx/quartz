@@ -1,3 +1,3 @@
-module github.com/woremacx/go-quartz
+module github.com/woremacx/quartz
 
 go 1.16

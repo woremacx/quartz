@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/woremacx/go-quartz/quartz"
+	"github.com/woremacx/quartz"
 )
 
 func TestScheduler(t *testing.T) {

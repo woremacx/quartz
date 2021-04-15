@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/woremacx/go-quartz/quartz"
+	"github.com/woremacx/quartz"
 )
 
 func assertEqual(t *testing.T, a interface{}, b interface{}) {

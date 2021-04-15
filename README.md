@@ -1,4 +1,4 @@
-# go-quartz
+# quartz
 fork from https://github.com/reugn/go-quartz
 
 ## License
