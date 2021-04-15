@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/woremacx/go-quartz/quartz"
+	"github.com/woremacx/quartz"
 )
 
 // PrintJob implements the quartz.Job interface.

@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/woremacx/go-quartz/quartz"
+	"github.com/woremacx/quartz"
 )
 
 //demo main
