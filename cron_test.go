@@ -288,3 +288,19 @@ func iterate(prev int64, cronTrigger *CronTrigger, iterations int) (string, erro
 func getTimeFromInt64(value int64) string {
 	return time.Unix(value/int64(time.Second), 0).Local().Format(readDateLayout)
 }
+
+func TestExpressionForHuman(t *testing.T) {
+	cronTrigger, err := NewCronTrigger("50/5 57/2 20/3 5-7 Jan,Dec * *")
+	if err != nil {
+		t.Fatal(err)
+	}
+	assertEqual(t, cronTrigger.ExpressionForHuman(),
+		"month=[1 12], day=[5 6 7], hour=[20 23], minute=[57 59], second=[50 55]")
+
+	cronTrigger2, err := NewCronTrigger("50/5 57/2 20/3 * Jan,Dec Tue-Thu *")
+	if err != nil {
+		t.Fatal(err)
+	}
+	assertEqual(t, cronTrigger2.ExpressionForHuman(),
+		"dayOfWeek=[2 3 4], month=[1 12], hour=[20 23], minute=[57 59], second=[50 55]")
+}
