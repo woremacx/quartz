@@ -9,11 +9,33 @@ import (
 	"github.com/woremacx/quartz"
 )
 
+const (
+	readDateLayout = "Mon Jan 2 15:04:05 2006"
+)
+
 // for debug
 var verbose = false
 
+// on original(reugn/go-quartz), it was 1555351200000000000
+// $ date -d @1555351200
+// Mon Apr 15 18:00:00 UTC 2019
+var PREV_1 = int64TimeFromStringByLocal("Mon Apr 15 18:00:00 2019")
+
+// on original(reugn/go-quartz), it was 1555524000000000000
+// $ date -d @1555524000
+// Wed Apr 17 18:00:00 UTC 2019
+var PREV_2 = int64TimeFromStringByLocal("Wed Apr 17 18:00:00 2019")
+
+func int64TimeFromStringByLocal(value string) int64 {
+	localTimeFromString, err := time.ParseInLocation(readDateLayout, value, time.Local)
+	if err != nil {
+		panic(err)
+	}
+	return localTimeFromString.UnixNano()
+}
+
 func TestCronExpression1(t *testing.T) {
-	prev := int64(1555318800000000000) // Tue Apr 16 03:00:00 2019
+	prev := PREV_1
 	if verbose {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
@@ -31,7 +53,7 @@ func TestCronExpression1(t *testing.T) {
 }
 
 func TestCronExpression2(t *testing.T) {
-	prev := int64(1555318800000000000) // Tue Apr 16 03:00:00 2019
+	prev := PREV_1
 	if verbose {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
@@ -48,7 +70,7 @@ func TestCronExpression2(t *testing.T) {
 }
 
 func TestCronExpression3(t *testing.T) {
-	prev := int64(1555318800000000000) // Tue Apr 16 03:00:00 2019
+	prev := PREV_1
 	if verbose {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
@@ -74,7 +96,7 @@ func TestCronExpression4(t *testing.T) {
 }
 
 func TestCronExpression5(t *testing.T) {
-	prev := int64(1555318800000000000) // Tue Apr 16 03:00:00 2019
+	prev := PREV_1
 	if verbose {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
@@ -89,7 +111,7 @@ func TestCronExpression5(t *testing.T) {
 }
 
 func TestCronExpression6(t *testing.T) {
-	prev := int64(1555318800000000000) // Tue Apr 16 03:00:00 2019
+	prev := PREV_1
 	if verbose {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
@@ -104,7 +126,7 @@ func TestCronExpression6(t *testing.T) {
 }
 
 func TestCronExpression7(t *testing.T) {
-	prev := int64(1555351200000000000)
+	prev := PREV_1
 	if verbose {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
@@ -115,7 +137,7 @@ func TestCronExpression7(t *testing.T) {
 	} else {
 		result, _ = iterate(prev, cronTrigger, 1000)
 	}
-	assertEqual(t, result, "Tue Jul 16 22:09:00 2019")
+	assertEqual(t, result, "Tue Jul 16 16:09:00 2019")
 }
 
 func TestCronDaysOfWeek(t *testing.T) {
@@ -137,7 +159,7 @@ func TestCronDaysOfWeek(t *testing.T) {
 }
 
 func cronDayOfWeek(t *testing.T, dayOfWeek, expected string) {
-	prev := int64(1555491600000000000) // Wed Apr 17 18:00:00 2019
+	prev := PREV_2
 	if verbose {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
@@ -156,7 +178,7 @@ func cronDayOfWeek(t *testing.T, dayOfWeek, expected string) {
 }
 
 func TestCronYearly(t *testing.T) {
-	prev := int64(1555351200000000000)
+	prev := PREV_1
 	if verbose {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
@@ -171,7 +193,7 @@ func TestCronYearly(t *testing.T) {
 }
 
 func TestCronMonthly(t *testing.T) {
-	prev := int64(1555351200000000000)
+	prev := PREV_1
 	if verbose {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
@@ -186,7 +208,7 @@ func TestCronMonthly(t *testing.T) {
 }
 
 func TestCronWeekly(t *testing.T) {
-	prev := int64(1555351200000000000)
+	prev := PREV_1
 	if verbose {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
@@ -201,7 +223,7 @@ func TestCronWeekly(t *testing.T) {
 }
 
 func TestCronDaily(t *testing.T) {
-	prev := int64(1555318800000000000) // Tue Apr 16 03:00:00 2019
+	prev := PREV_1
 	if verbose {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
@@ -216,7 +238,7 @@ func TestCronDaily(t *testing.T) {
 }
 
 func TestCronHourly(t *testing.T) {
-	prev := int64(1555318800000000000) // Tue Apr 16 03:00:00 2019
+	prev := PREV_1
 	if verbose {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
@@ -229,8 +251,6 @@ func TestCronHourly(t *testing.T) {
 	}
 	assertEqual(t, result, "Wed May 29 06:00:00 2019")
 }
-
-var readDateLayout = "Mon Jan 2 15:04:05 2006"
 
 func iterate(prev int64, cronTrigger *quartz.CronTrigger, iterations int) (string, error) {
 	var err error
