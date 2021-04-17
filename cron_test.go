@@ -2,6 +2,7 @@ package quartz
 
 import (
 	"fmt"
+	"reflect"
 	"strconv"
 	"testing"
 	"time"
@@ -87,6 +88,30 @@ func TestCronExpression4(t *testing.T) {
 	if err == nil {
 		t.Fatalf("%s should fail", expression)
 	}
+}
+
+func getFieldsForTest(ct *CronTrigger) []*CronField {
+	return ct.fields
+}
+
+func TestCronExpressionAllowWideSpace(t *testing.T) {
+	// strict by originals
+	originalTrigger, err := NewCronTrigger("10/20 15 14 5-10 * ? *")
+	if err != nil {
+		t.Log(err)
+		t.Fatalf("fail originals")
+	}
+
+	// wide space
+	wideSpaceTrigger, err := NewCronTrigger("10/20     15 14 5-10 * ? *")
+	if err != nil {
+		t.Log(err)
+		t.Fatalf("fail wideSpace")
+	}
+
+	originalFields := getFieldsForTest(originalTrigger)
+	wideSpaceFields := getFieldsForTest(wideSpaceTrigger)
+	reflect.DeepEqual(originalFields, wideSpaceFields)
 }
 
 func TestCronExpression5(t *testing.T) {

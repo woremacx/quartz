@@ -3,6 +3,7 @@ package quartz
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -163,6 +164,8 @@ func (parser *CronExpressionParser) nextTime(prev int64, fields []*CronField) (n
 	return
 }
 
+var blanks = regexp.MustCompile(`[ ]+`)
+
 // the ? wildcard is only used in the day of month and day of week fields
 func validateCronExpression(expression string) ([]*CronField, error) {
 	var tokens []string
@@ -170,6 +173,9 @@ func validateCronExpression(expression string) ([]*CronField, error) {
 	if value, ok := special[expression]; ok {
 		tokens = strings.Split(value, " ")
 	} else {
+		// replace wide spaces
+		expression = blanks.ReplaceAllString(expression, " ")
+
 		tokens = strings.Split(expression, " ")
 	}
 	length := len(tokens)
