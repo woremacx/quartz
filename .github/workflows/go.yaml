@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Test
-        run: TZ=Asia/Tokyo go test -v
+        run: go test -v
 
       - name: Build Example
         run: go build -v -o ./examples/examples ./examples/
