@@ -1,10 +1,8 @@
-package quartz_test
+package quartz
 
 import (
 	"reflect"
 	"testing"
-
-	"github.com/woremacx/quartz"
 )
 
 func assertEqual(t *testing.T, a interface{}, b interface{}) {
@@ -26,6 +24,6 @@ func assertNotEqual(t *testing.T, a interface{}, b interface{}) {
 }
 
 func TestUtils(t *testing.T) {
-	hash := quartz.HashCode("foo")
+	hash := HashCode("foo")
 	assertEqual(t, hash, 2851307223)
 }

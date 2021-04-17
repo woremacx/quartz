@@ -1,38 +1,36 @@
-package quartz_test
+package quartz
 
 import (
 	"net/http"
 	"testing"
 	"time"
-
-	"github.com/woremacx/quartz"
 )
 
 func TestScheduler(t *testing.T) {
-	sched := quartz.NewStdScheduler()
+	sched := NewStdScheduler()
 	var jobKeys [4]int
 
-	shellJob := quartz.NewShellJob("ls -la")
+	shellJob := NewShellJob("ls -la")
 	shellJob.Description()
 	jobKeys[0] = shellJob.Key()
 
-	curlJob, err := quartz.NewCurlJob(http.MethodGet, "http://worldclockapi.com/api/json/est/now", "", nil)
+	curlJob, err := NewCurlJob(http.MethodGet, "http://worldclockapi.com/api/json/est/now", "", nil)
 	assertEqual(t, err, nil)
 	curlJob.Description()
 	jobKeys[1] = curlJob.Key()
 
-	errShellJob := quartz.NewShellJob("ls -z")
+	errShellJob := NewShellJob("ls -z")
 	jobKeys[2] = errShellJob.Key()
 
-	errCurlJob, err := quartz.NewCurlJob(http.MethodGet, "http://", "", nil)
+	errCurlJob, err := NewCurlJob(http.MethodGet, "http://", "", nil)
 	assertEqual(t, err, nil)
 	jobKeys[3] = errCurlJob.Key()
 
 	sched.Start()
-	sched.ScheduleJob(shellJob, quartz.NewSimpleTrigger(time.Millisecond*800))
-	sched.ScheduleJob(curlJob, quartz.NewRunOnceTrigger(time.Millisecond))
-	sched.ScheduleJob(errShellJob, quartz.NewRunOnceTrigger(time.Millisecond))
-	sched.ScheduleJob(errCurlJob, quartz.NewSimpleTrigger(time.Millisecond*800))
+	sched.ScheduleJob(shellJob, NewSimpleTrigger(time.Millisecond*800))
+	sched.ScheduleJob(curlJob, NewRunOnceTrigger(time.Millisecond))
+	sched.ScheduleJob(errShellJob, NewRunOnceTrigger(time.Millisecond))
+	sched.ScheduleJob(errCurlJob, NewSimpleTrigger(time.Millisecond*800))
 
 	time.Sleep(time.Second)
 	scheduledJobKeys := sched.GetJobKeys()
@@ -54,8 +52,8 @@ func TestScheduler(t *testing.T) {
 
 	sched.Clear()
 	sched.Stop()
-	assertEqual(t, shellJob.JobStatus, quartz.OK)
-	assertEqual(t, curlJob.JobStatus, quartz.OK)
-	assertEqual(t, errShellJob.JobStatus, quartz.FAILURE)
-	assertEqual(t, errCurlJob.JobStatus, quartz.FAILURE)
+	assertEqual(t, shellJob.JobStatus, OK)
+	assertEqual(t, curlJob.JobStatus, OK)
+	assertEqual(t, errShellJob.JobStatus, FAILURE)
+	assertEqual(t, errCurlJob.JobStatus, FAILURE)
 }
