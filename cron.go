@@ -67,6 +67,68 @@ func (ct *CronTrigger) Description() string {
 	return fmt.Sprintf("CronTrigger %s", ct.expression)
 }
 
+func (ct *CronTrigger) getOneField(idx int) []int {
+	field := ct.fields[idx]
+	if field == nil {
+		return nil
+	}
+	return field.values
+}
+
+func (ct *CronTrigger) Second() []int {
+	return ct.getOneField(secondIndex)
+}
+
+func (ct *CronTrigger) Minute() []int {
+	return ct.getOneField(minuteIndex)
+}
+
+func (ct *CronTrigger) Hour() []int {
+	return ct.getOneField(hourIndex)
+}
+
+func (ct *CronTrigger) Day() []int {
+	return ct.getOneField(dayOfMonthIndex)
+}
+
+func (ct *CronTrigger) Month() []int {
+	return ct.getOneField(monthIndex)
+}
+
+func (ct *CronTrigger) DayOfWeek() []int {
+	return ct.getOneField(dayOfWeekIndex)
+}
+
+func (ct *CronTrigger) Year() []int {
+	return ct.getOneField(yearIndex)
+}
+
+func (ct *CronTrigger) ExpressionForHuman() string {
+	var buf []string
+	if len(ct.Year()) > 0 {
+		buf = append(buf, fmt.Sprintf("year=%v", ct.Year()))
+	}
+	if len(ct.DayOfWeek()) > 0 {
+		buf = append(buf, fmt.Sprintf("dayOfWeek=%v", ct.DayOfWeek()))
+	}
+	if len(ct.Month()) > 0 {
+		buf = append(buf, fmt.Sprintf("month=%v", ct.Month()))
+	}
+	if len(ct.Day()) > 0 {
+		buf = append(buf, fmt.Sprintf("day=%v", ct.Day()))
+	}
+	if len(ct.Hour()) > 0 {
+		buf = append(buf, fmt.Sprintf("hour=%v", ct.Hour()))
+	}
+	if len(ct.Minute()) > 0 {
+		buf = append(buf, fmt.Sprintf("minute=%v", ct.Minute()))
+	}
+	if len(ct.Second()) > 0 {
+		buf = append(buf, fmt.Sprintf("second=%v", ct.Second()))
+	}
+	return strings.Join(buf, ", ")
+}
+
 // CronExpressionParser parses cron expressions.
 type CronExpressionParser struct {
 	minuteBump bool
