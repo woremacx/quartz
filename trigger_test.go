@@ -1,16 +1,14 @@
-package quartz_test
+package quartz
 
 import (
 	"testing"
 	"time"
-
-	"github.com/woremacx/quartz"
 )
 
 var from_epoch int64 = 1577836800000000000
 
 func TestSimpleTrigger(t *testing.T) {
-	trigger := quartz.NewSimpleTrigger(time.Second * 5)
+	trigger := NewSimpleTrigger(time.Second * 5)
 	trigger.Description()
 
 	next, err := trigger.NextFireTime(from_epoch)
@@ -27,7 +25,7 @@ func TestSimpleTrigger(t *testing.T) {
 }
 
 func TestRunOnceTrigger(t *testing.T) {
-	trigger := quartz.NewRunOnceTrigger(time.Second * 5)
+	trigger := NewRunOnceTrigger(time.Second * 5)
 	trigger.Description()
 
 	next, err := trigger.NextFireTime(from_epoch)

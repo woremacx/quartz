@@ -1,16 +1,10 @@
-package quartz_test
+package quartz
 
 import (
 	"fmt"
 	"strconv"
 	"testing"
 	"time"
-
-	"github.com/woremacx/quartz"
-)
-
-const (
-	readDateLayout = "Mon Jan 2 15:04:05 2006"
 )
 
 // for debug
@@ -42,7 +36,7 @@ func TestCronExpression1(t *testing.T) {
 	result := ""
 	//                                         0     1  2  3    4 5 6
 	//                                         s     m  h  d    m w y
-	cronTrigger, err := quartz.NewCronTrigger("10/20 15 14 5-10 * ? *")
+	cronTrigger, err := NewCronTrigger("10/20 15 14 5-10 * ? *")
 	cronTrigger.Description()
 	if err != nil {
 		t.Fatal(err)
@@ -60,7 +54,7 @@ func TestCronExpression2(t *testing.T) {
 	result := ""
 	//                                         0 1     2     3 4 5 6
 	//                                         s min   hour  d m w y
-	cronTrigger, err := quartz.NewCronTrigger("* 5,7,9 14-16 * * ? *")
+	cronTrigger, err := NewCronTrigger("* 5,7,9 14-16 * * ? *")
 	if err != nil {
 		t.Fatal(err)
 	} else {
@@ -78,7 +72,7 @@ func TestCronExpression3(t *testing.T) {
 	//       0 1     2    3 4 5       6
 	//       s m     h    d m w       y
 	expr := "* 5,7,9 14/2 * * Wed,Sat *"
-	cronTrigger, err := quartz.NewCronTrigger(expr)
+	cronTrigger, err := NewCronTrigger(expr)
 	if err != nil {
 		t.Fatal(err)
 	} else {
@@ -89,7 +83,7 @@ func TestCronExpression3(t *testing.T) {
 
 func TestCronExpression4(t *testing.T) {
 	expression := "0 5,7 14 1 * Sun *"
-	_, err := quartz.NewCronTrigger(expression)
+	_, err := NewCronTrigger(expression)
 	if err == nil {
 		t.Fatalf("%s should fail", expression)
 	}
@@ -101,7 +95,7 @@ func TestCronExpression5(t *testing.T) {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
 	result := ""
-	cronTrigger, err := quartz.NewCronTrigger("* * * * * ? *")
+	cronTrigger, err := NewCronTrigger("* * * * * ? *")
 	if err != nil {
 		t.Fatal(err)
 	} else {
@@ -116,7 +110,7 @@ func TestCronExpression6(t *testing.T) {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
 	result := ""
-	cronTrigger, err := quartz.NewCronTrigger("* * 14/2 * * Mon/3 *")
+	cronTrigger, err := NewCronTrigger("* * 14/2 * * Mon/3 *")
 	if err != nil {
 		t.Fatal(err)
 	} else {
@@ -131,7 +125,7 @@ func TestCronExpression7(t *testing.T) {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
 	result := ""
-	cronTrigger, err := quartz.NewCronTrigger("* 5-9 14/2 * * 0-2 *")
+	cronTrigger, err := NewCronTrigger("* 5-9 14/2 * * 0-2 *")
 	if err != nil {
 		t.Fatal(err)
 	} else {
@@ -164,7 +158,7 @@ func cronDayOfWeek(t *testing.T, dayOfWeek, expected string) {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
 	expression := fmt.Sprintf("0 0 0 * * %s", dayOfWeek)
-	cronTrigger, err := quartz.NewCronTrigger(expression)
+	cronTrigger, err := NewCronTrigger(expression)
 	if err != nil {
 		t.Fatal(err)
 	} else {
@@ -183,7 +177,7 @@ func TestCronYearly(t *testing.T) {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
 	result := ""
-	cronTrigger, err := quartz.NewCronTrigger("@yearly")
+	cronTrigger, err := NewCronTrigger("@yearly")
 	if err != nil {
 		t.Fatal(err)
 	} else {
@@ -198,7 +192,7 @@ func TestCronMonthly(t *testing.T) {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
 	result := ""
-	cronTrigger, err := quartz.NewCronTrigger("@monthly")
+	cronTrigger, err := NewCronTrigger("@monthly")
 	if err != nil {
 		t.Fatal(err)
 	} else {
@@ -213,7 +207,7 @@ func TestCronWeekly(t *testing.T) {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
 	result := ""
-	cronTrigger, err := quartz.NewCronTrigger("@weekly")
+	cronTrigger, err := NewCronTrigger("@weekly")
 	if err != nil {
 		t.Fatal(err)
 	} else {
@@ -228,7 +222,7 @@ func TestCronDaily(t *testing.T) {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
 	result := ""
-	cronTrigger, err := quartz.NewCronTrigger("@daily")
+	cronTrigger, err := NewCronTrigger("@daily")
 	if err != nil {
 		t.Fatal(err)
 	} else {
@@ -243,7 +237,7 @@ func TestCronHourly(t *testing.T) {
 		t.Logf("prev: %s", getTimeFromInt64(prev))
 	}
 	result := ""
-	cronTrigger, err := quartz.NewCronTrigger("@hourly")
+	cronTrigger, err := NewCronTrigger("@hourly")
 	if err != nil {
 		t.Fatal(err)
 	} else {
@@ -252,7 +246,7 @@ func TestCronHourly(t *testing.T) {
 	assertEqual(t, result, "Wed May 29 06:00:00 2019")
 }
 
-func iterate(prev int64, cronTrigger *quartz.CronTrigger, iterations int) (string, error) {
+func iterate(prev int64, cronTrigger *CronTrigger, iterations int) (string, error) {
 	var err error
 	for i := 0; i < iterations; i++ {
 		prev, err = cronTrigger.NextFireTime(prev)
